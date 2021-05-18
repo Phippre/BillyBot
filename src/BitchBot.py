@@ -29,6 +29,10 @@ async def on_ready():
     detect_members.start()
 
 @client.command()
+async def helpme(ctx, aliases='help'):
+    await ctx.send('.help - Sends this message\n.youretrash - Display server statistics\n.beatbilly - Please dont hurt me again.\n.join - I join voice chat :flushed:\n.leave - I leave you just like everyone else in your life. :feelsberdman:')
+
+@client.command()
 async def clear(ctx, amount=2):
     if amount <= 5:
         await ctx.channel.purge(limit=amount)
