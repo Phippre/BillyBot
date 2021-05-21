@@ -25,10 +25,10 @@ class BasicCommands(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         await self.client.change_presence(activity=discord.Game('With Cocaine'))
-        global currentMembers
-        currentMembers = len(self.client.get_channel(533319670552330244).members)
+        #global currentMembers
+        #currentMembers = len(self.client.get_channel(533319670552330244).members)
         print('Billy is ready for you daddy.')
-        self.detect_members.start()
+        #self.detect_members.start()
 
     @commands.command()
     async def help(self, ctx):
@@ -41,7 +41,6 @@ class BasicCommands(commands.Cog):
         embed.add_field(name='.leave', value='\nI leave you just like everyone else in your life. :weary:', inline=True)
         embed.add_field(name='.whatdoyouthink', value='Tells you my opinion on your bullshit', inline=True)
 
-        await ctx.send(embed=embed)
 
     @commands.command()
     async def clear(self, ctx, amount=2):
@@ -82,22 +81,22 @@ class BasicCommands(commands.Cog):
     async def leave(self, ctx):
         await ctx.voice_client.disconnect()
 
-    @tasks.loop()
-    async def detect_members(self):
-        global currentMembers
-        newChannelMembers = self.client.get_channel(533319670552330244).members
-        
-        if len(newChannelMembers) != currentMembers and len(newChannelMembers) >= currentMembers:
-            currentChannel = await self.client.get_channel(533319670552330244).connect()
-            currentChannel.play(discord.FFmpegPCMAudio(executable='C:/ffmpeg/bin/ffmpeg.exe', source='C:/hahh.mp3'))
-            while currentChannel.is_playing():
-                time.sleep(.1)
-            else:
-                await currentChannel.disconnect()
-            
-        newChannelMembers = self.client.get_channel(533319670552330244).members
-    
-        currentMembers = len(newChannelMembers)
+    #@tasks.loop()
+    #async def detect_members(self):
+    #    global currentMembers
+    #    newChannelMembers = self.client.get_channel(533319670552330244).members
+    #    
+    #    if len(newChannelMembers) != currentMembers and len(newChannelMembers) >= currentMembers:
+    #        currentChannel = await self.client.get_channel(533319670552330244).connect()
+    #        currentChannel.play(discord.FFmpegPCMAudio(executable='C:/ffmpeg/bin/ffmpeg.exe', source='C:/hahh.mp3'))
+    #        while currentChannel.is_playing():
+    #            time.sleep(.1)
+    #        else:
+    #            await currentChannel.disconnect()
+    #        
+    #    newChannelMembers = self.client.get_channel(533319670552330244).members
+    #
+    #    currentMembers = len(newChannelMembers)
 
     
 
