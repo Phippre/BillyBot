@@ -18,7 +18,7 @@ from typing import ContextManager
 intents = discord.Intents.all()
 intents.members = True
 
-client = commands.Bot(command_prefix='.', intents = intents)
+client = commands.Bot(command_prefix='.', intents = intents, help_command=None)
 
 @client.event
 async def on_ready():
@@ -29,8 +29,17 @@ async def on_ready():
     detect_members.start()
 
 @client.command()
-async def helpme(ctx, aliases='help'):
-    await ctx.send('.help - Sends this message\n.youretrash - Display server statistics\n.beatbilly - Please dont hurt me again.\n.join - I join voice chat :flushed:\n.leave - I leave you just like everyone else in your life. :feelsberdman:')
+async def help(ctx):
+    embed = discord.Embed(title="Help Dad?", description="Heres what I can do for you :wink:", inline=True)
+    embed.add_field(name='.help', value='Sends this message', inline=True)
+    embed.add_field(name='.clear', value='\nClears your dirty messages :wink: Default is 5', inline=True)
+    embed.add_field(name='.youretrash', value='\nDisplay server statistics', inline=True)
+    embed.add_field(name='.beatbilly', value='\nPlease dont hurt me again', inline=True)
+    embed.add_field(name='.join', value='\nI join voice chat :flushed:', inline=True)
+    embed.add_field(name='.leave', value='\nI leave you just like everyone else in your life. :weary:', inline=True)
+    embed.add_field(name='.whatdoyouthink', value='Tells you my opinion on your bullshit', inline=True)
+
+    await ctx.send(embed=embed)
 
 @client.command()
 async def clear(ctx, amount=2):
@@ -48,6 +57,10 @@ async def youretrash(ctx):
 async def beatbilly(ctx):
     responses = ['Please not again :(', 'Dont send me back to the hospital :(', 'FUCK!', 'It wasnt me!', 'I swear ill be a better bot.', 'DISCORD HELP ME.', 'End my suffering.', 'I just want to die.', 'I didnt do anything wrong though!', 'Please let me see my family :(']
     await ctx.send(f'{random.choice(responses)}')
+
+@client.command()
+async def whatdoyouthink(ctx):
+    await ctx.send('Fucking dope dude.')
 
 @client.command()
 async def play(ctx):
