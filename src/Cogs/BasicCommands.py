@@ -1,6 +1,7 @@
 import discord
 import random
 import time
+import os
 import youtube_dl
 from discord import channel
 from discord import FFmpegPCMAudio
