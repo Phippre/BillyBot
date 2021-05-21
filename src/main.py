@@ -39,3 +39,4 @@ for filename in os.listdir('C:/Users/parke/Documents/GitHub/BillyBot/src/Cogs'):
         client.load_extension(f'Cogs.{filename[:-3]}') 
 
 
+client.run('TOKEN')
