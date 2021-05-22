@@ -40,8 +40,9 @@ class BasicCommands(commands.Cog):
 
 
     @commands.command()
-    async def clear(self, ctx, amount=2):
-        if amount <= 5:
+    @commands.has_permissions(administrator=True)
+    async def clear(self, ctx, amount=5):
+        if amount <= 20:
             await ctx.channel.purge(limit=amount)
             await ctx.send(f'Purged {amount} messages ma Lord')
         else:

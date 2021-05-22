@@ -51,7 +51,7 @@ class DetectMembers(commands.Cog):
         
         if len(newChannelMembers) != currentMembers and len(newChannelMembers) >= currentMembers:
             currentChannel = await self.client.get_channel(533319670552330244).connect()
-            currentChannel.play(discord.FFmpegPCMAudio(executable='C:/ffmpeg/bin/ffmpeg.exe', source=f'C:/SoundClips/{random.choice(soundClips)}'))
+            currentChannel.play(discord.FFmpegPCMAudio(executable='C:/ffmpeg/bin/ffmpeg.exe', source=f'C:/SoundClips/{random.choice(soundClips)}'))#{random.choice(soundClips)}
             while currentChannel.is_playing():
                 time.sleep(.1)
             else:
