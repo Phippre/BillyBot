@@ -2,20 +2,7 @@ import discord
 import random
 import time
 import os
-from discord.errors import ClientException
-import youtube_dl
-from discord import channel
-from discord import FFmpegPCMAudio
-from discord import guild
 from discord.ext import commands, tasks
-from itertools import cycle
-from discord.ext.commands import context
-from discord.ext.commands.context import Context
-from discord.guild import Guild
-from discord.member import VoiceState
-from discord.utils import escape_markdown
-from asyncio.tasks import sleep
-from typing import ContextManager
 
 
 class DetectMembers(commands.Cog):
