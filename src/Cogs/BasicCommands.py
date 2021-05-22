@@ -62,13 +62,32 @@ class BasicCommands(commands.Cog):
         await ctx.send('Fucking dope dude.')
 
     @commands.command()
-    async def play(self, ctx):
-        vc = await ctx.author.voice.channel.connect()
-        vc.play(discord.FFmpegPCMAudio(executable="C:/ffmpeg/bin/ffmpeg.exe", source='C:/hahh.mp3'))
-        while vc.is_playing():
-            time.sleep(.1)
-        else:
-            await vc.disconnect()
+    async def play(self, ctx, url : str):
+        os.chdir('./src/Cogs')
+        song_there = os.path.isfile('./song.mp3')
+        
+        if song_there:
+            os.remove('./song.mp3')
+#
+        vc = await self.client.get_channel(533319670552330244).connect()
+#
+        ydl_opts = {
+            'format': 'bestaudio/best',
+            'postprocessors': [{
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'mp3',
+                'preferredquality': '192',
+            }],
+        }
+#
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([url])
+
+        for file in os.listdir('./'):
+            print(file)
+            if file.endswith('.mp3'):
+                os.rename(file, './song.mp3')
+        vc.play(discord.FFmpegPCMAudio(executable='C:/ffmpeg/bin/ffmpeg.exe', source='./song.mp3'))
 
     @commands.command()
     async def join(self, ctx):
