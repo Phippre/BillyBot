@@ -1,0 +1,16 @@
+def generate_random():
+    page_url = "https://www.urbandictionary.com/random.php"
+
+    url_client = req(page_url)
+
+    page_soup = soup(url_client.read(), "html.parser")
+    url_client.close()
+
+    titles = page_soup.findAll("a", {"data-x-bind": "definition"})
+    definitions = page_soup.findAll("div", {"class": "break-words meaning mb-4"})
+    example = page_soup.findAll("div", {"class": "break-words example italic mb-4"})
+    
+    #print(type(titles))
+
+    for i in range(len(titles)):
+        print(titles[i].text + ":\n" + definitions[i].text + "\n" + "Example: " + example[i].text + "\n")
