@@ -15,7 +15,7 @@ class PlayYoutube(commands.Cog):
     async def play(self, ctx, *, url):
         FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
         YDL_OPTIONS = {'format': 'bestaudio/best', 'noplaylist':'True'}
-        voice = await self.client.get_channel(533319670552330244).connect()
+        voice = await self.client.get_channel(CHANNEL ID).connect()
         with YoutubeDL(YDL_OPTIONS) as ydl:
             info = ydl.extract_info(url, download = False)
             I_URL = info['formats'][0]['url']
@@ -23,8 +23,8 @@ class PlayYoutube(commands.Cog):
             voice.play(source)
             voice.is_playing()
 
-def setup(client): 
-    client.add_cog(PlayYoutube(client))
+async def setup(client): 
+    await client.add_cog(PlayYoutube(client))
 
 
 

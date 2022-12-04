@@ -1,28 +1,65 @@
 import discord
 import random
-from discord.ext import commands
+from discord.ext import commands, tasks
+from bs4 import BeautifulSoup as soup
+from urllib.request import urlopen as req
+import feedparser
 
 
 class BasicCommands(commands.Cog):
 
     def __init__(self, client):
         self.client = client
+        self.rss_entries = []
+        self.rss_links = []
+        
 
     @commands.Cog.listener()
     async def on_ready(self):
         await self.client.change_presence(activity=discord.Game('With Cocaine'))
+        await self.tech_rss.start()
         print('Billy is ready for you daddy.')
+
+    @tasks.loop(minutes=60)
+    async def tech_rss(self):
+        print("Getting Tech Feeds")
+        
+        channel = self.client.get_channel(CHANNEL_ID)
+        
+        try:
+            NewsFeed = feedparser.parse("NONE")
+            
+            entry = NewsFeed.entries[0]
+            entry_title = entry.title
+            entry_link = entry.link
+            if entry_title not in self.rss_entries:
+                self.rss_entries.append(entry_title)
+                self.rss_links.append(entry_link)
+                embed = discord.Embed(title=entry_title, description=entry_link)
+                if entry.__contains__('media_thumbnail'):
+                    #print(entry.media_thumbnail[0]['url'])
+                    embed.set_thumbnail(url=entry.media_thumbnail[0]['url'])
+                await channel.send(embed=embed)
+        except:
+            print("Unable to get RSS Feed")
+        
 
     @commands.command()
     async def help(self, ctx):
-        embed = discord.Embed(title="Help Dad?", description="Heres what I can do for you :wink:", inline=True)
-        embed.add_field(name='.help', value='Sends this message', inline=True)
-        embed.add_field(name='.clear', value='\nClears your dirty messages :wink: Default is 5', inline=True)
-        embed.add_field(name='.youretrash', value='\nDisplay server statistics', inline=True)
-        embed.add_field(name='.beatbilly', value='\nPlease dont hurt me again', inline=True)
-        embed.add_field(name='.join', value='\nI join voice chat :flushed:', inline=True)
-        embed.add_field(name='.leave', value='\nI leave you just like everyone else in your life. :weary:', inline=True)
-        embed.add_field(name='.whatdoyouthink', value='Tells you my opinion on your bullshit', inline=True)
+        try:
+            embed = discord.Embed(title="Help Dad?", description="Heres what I can do for you :wink:")
+            embed.set_thumbnail(url='NONE')
+            embed.add_field(name='.help', value='Sends this message', inline=False)
+            embed.add_field(name='.clear', value='\nClears your dirty messages :wink: Default is 5', inline=False)
+            embed.add_field(name='.youretrash', value='\nDisplay server statistics', inline=False)
+            embed.add_field(name='.beatbilly', value='\nPlease dont hurt me again', inline=False)
+            embed.add_field(name='.join', value='\nI join voice chat :flushed:', inline=False)
+            embed.add_field(name='.leave', value='\nI leave you just like everyone else in your life. :weary:', inline=False)
+            embed.add_field(name='.whatdoyouthink', value='Tells you my opinion on your bullshit', inline=False)
+            embed.add_field(name='.urbanquery', value='Gives you a random word from Urban Dictionary', inline=False)
+            await ctx.send(embed=embed)
+        except:
+            print("Help Command Failed")
 
 
     @commands.command()
@@ -49,6 +86,7 @@ class BasicCommands(commands.Cog):
 
     @commands.command()
     async def join(self, ctx):
+        print('joining')
         channel = ctx.author.voice.channel
         await channel.connect()
 
@@ -56,7 +94,29 @@ class BasicCommands(commands.Cog):
     async def leave(self, ctx):
         await ctx.voice_client.disconnect()
 
+    @commands.command()
+    async def urbanquery(self, ctx):
+        page_url = "https://www.urbandictionary.com/random.php"
+
+        url_client = req(page_url)
+
+        page_soup = soup(url_client.read(), "html.parser")
+        url_client.close()
+
+        titles = page_soup.findAll("a", {"data-x-bind": "definition"})
+        definitions = page_soup.findAll("div", {"class": "break-words meaning mb-4"})
+        example = page_soup.findAll("div", {"class": "break-words example italic mb-4"})
+    
+        responses = []
+
+        for i in range(len(titles)):
+            responses.append(titles[i].text + ":\n" + definitions[i].text + "\n" + "Example: " + example[i].text + "\n")
+        
+        embed = discord.Embed(title=titles[0].text, description=definitions[0].text)
+        embed.set_thumbnail(url='GIF')
+        
+        await ctx.send(embed=embed)
     
 
-def setup(client): 
-    client.add_cog(BasicCommands(client))
+async def setup(client): 
+    await client.add_cog(BasicCommands(client))
